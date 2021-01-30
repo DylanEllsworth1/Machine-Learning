@@ -11,11 +11,12 @@ def pickUnseenData(df, num):
     drop_li = []
     for i in range(num):
         unseen_df = unseen_df.append(df.iloc[index_li[i]])
-        # drop_li.append(df.index[index_li[i]])
+        drop_li.append(df.index[index_li[i]])
     df = df.drop(drop_li)
     return (df, unseen_df)
 
 # caculate distance between instance_1 and instance_2
+# euclidean distance metric
 # return distance and class
 
 
@@ -48,12 +49,10 @@ if __name__ == "__main__":
         print("Useage: {} <data_file> <k> <unseen_data_num>".format(
             sys.argv[0]))
         exit(1)
-    df = pd.read_csv("Data4A1.tsv", sep="\t",
+    df = pd.read_csv(sys.argv[1], sep="\t",
                      header=0, index_col="Sequence.id")
-    # print(seen_df.shape, unseen_df.shape)
     seen_df, unseen_df = pickUnseenData(df, int(sys.argv[3]))
     result = knn(seen_df, unseen_df, int(sys.argv[2]))
-    print(result)
-    print(unseen_df['Class'])
     diff = result-unseen_df
-    print(diff.shape[0], diff[diff['Class'] == 0].shape[0])
+    print('k: {}; proportion of correctly classfied unknown instances: {}%'.format(
+        sys.argv[2], diff[diff['Class'] == 0].shape[0]/diff.shape[0]*100))
