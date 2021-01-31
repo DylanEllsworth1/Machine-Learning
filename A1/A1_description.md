@@ -18,6 +18,8 @@ _We set the size for U=60_
 | 10  |      56.0%       |
 |  5  |      55.33%      |
 
+A best K would be k=50. It does not suffer from overfitting or underfitting, and has the highest accuracy out of the presented K values.
+
 ## Implementation testing
 
 Test with different values for neighbors k.
