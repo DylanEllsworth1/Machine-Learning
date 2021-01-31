@@ -18,7 +18,12 @@ _We set the size for U=60_
 | 10  |      56.0%       |
 |  5  |      55.33%      |
 
-## How to test our code
+## Implementation testing
+
+Test with different values for neighbors k.
+Test with different amounts of unknown instances U.
+Test with more unknown instances than training data T.
+Test with more training data T than unknown instances.
 
 ## specification
 
