@@ -4,7 +4,7 @@ import random
 
 
 def pickUnseenData(df, num):
-    # ramdom shuffle the original data in order to randomly get num instances as unseen_instances
+    # random shuffle the original data in order to randomly get num instances as unseen_instances
     index_li = [x for x in range(df.shape[0])]
     random.shuffle(index_li)
     unseen_df = pd.DataFrame(columns=df.columns, dtype=int)
@@ -15,7 +15,7 @@ def pickUnseenData(df, num):
     df = df.drop(drop_li)
     return (df, unseen_df)
 
-# caculate distance between instance_1 and instance_2
+# calculate distance between instance_1 and instance_2
 # euclidean distance metric
 # return distance and class
 
@@ -35,7 +35,7 @@ def knn(seen_df, unseen_df, k):
             dis, seen_class = getDistance(seen_instance, unseen_instance)
             dis_df = dis_df.append(
                 {'Distance': dis, 'Class': seen_class}, ignore_index=True)
-        # get k near neibours
+        # get k near neighbors
         k_df = dis_df.sort_values(by='Distance')[:k]
         if (k_df[k_df['Class'] == 0].shape[0] > k_df[k_df['Class'] == 1].shape[0]):
             ans.at[unseen_instance.name, 'Class'] = 0
