@@ -31,3 +31,8 @@ Test with more training data T than unknown instances.
 
 python version: 3.8.6 <br>
 libraries we used: pandas, sys, random
+
+## Accuracy with different K
+
+<img src="./accuracy.png"></img>
+
