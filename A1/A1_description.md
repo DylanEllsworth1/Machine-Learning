@@ -27,6 +27,10 @@ Test with different amounts of unknown instances U.
 Test with more unknown instances than training data T.
 Test with more training data T than unknown instances.
 
+## Collaborations and Online Sources
+
+Github used for collaboration.
+
 ## specification
 
 python version: 3.8.6 <br>
