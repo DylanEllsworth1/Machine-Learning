@@ -21,12 +21,12 @@ def Normalize(data):
       data[i] = (tmp_col - tmp_col.min()) / (tmp_col.max()-tmp_col.min())
   return data
 
-
+# Grid Search Cross Validation
 def GSCV(data):
   X = data.iloc[:, :-1]
   y = data.iloc[:, -1:]
+  # split the set randomly
   train_data, validation_data, train_labels, validation_labels = train_test_split(X, y, test_size=0.1)
-  # print(train_data, train_labels, validation_data, validation_labels)
   knn = KNeighborsClassifier()
   k_range = list(range(1, 10))
   weight_options = ['uniform','distance']
@@ -39,6 +39,7 @@ def GSCV(data):
   print('the best param is: {}'.format(grid_knn.best_params_))
   return grid_knn.best_params_
 
+# K-fold Cross Validation
 def KFoldCV(data, params, k):
   kf = KFold(n_splits=k, shuffle=True)
   X = data.iloc[:, :-1]
@@ -53,8 +54,6 @@ def KFoldCV(data, params, k):
     metrics.plot_roc_curve(knn, test_X, test_y.values.ravel())
     metrics.plot_precision_recall_curve(knn, test_X, test_y.values.ravel())
   plt.show()
-
-
 
 if __name__ == "__main__":
   if (len(sys.argv) < 2):
