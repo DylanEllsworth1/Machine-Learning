@@ -13,6 +13,8 @@ train_data_set_x = None
 train_data_set_y = None
 test_data_set_x = None
 test_data_set_y = None
+data_X = None
+data_y = None
 
 def ReadData(tsv_file):
   data = pd.read_csv(tsv_file, sep="\t", header=0)
@@ -29,13 +31,26 @@ def GSCV():
   mse = np.average((y_hat - np.array(test_data_set_y))**2)
   rmse = np.sqrt(mse)
   print(mse, rmse)
+  # t = np.arange(len(test_data_set_x))
+  # plt.plot(t, test_data_set_y, 'r-', linewidth=2, label='Test')
+  # plt.plot(t, y_hat, 'g-', linewidth=2, label='Predict')
+  # plt.legend(loc='upper right')
+  # plt.grid()
+  # plt.show()
+  return lasso_model.best_params_
 
-  t = np.arange(len(test_data_set_x))
-  plt.plot(t, test_data_set_y, 'r-', linewidth=2, label='Test')
-  plt.plot(t, y_hat, 'g-', linewidth=2, label='Predict')
-  plt.legend(loc='upper right')
-  plt.grid()
-  plt.show()
+def KFoldCV(model, data_X, data_y, k):
+  kf = KFold(n_splits=k, shuffle=True)
+  accuracy_tot = 0
+  for train_index, test_index in kf.split(data_X):
+    train_X, train_y = data_X.loc[train_index], data_y.loc[train_index]
+    test_X, test_y = data_X.loc[test_index], data_y.loc[test_index]
+    model.fit(train_X, train_y.values.ravel())
+    score = model.score(test_X, test_y.values.ravel())
+    accuracy_tot = accuracy_tot + score
+    print('accuracy:{}'.format(score))
+  print('average accuracy: {}'.format(accuracy_tot/k))
+
 
 if __name__ == "__main__":
   if (len(sys.argv) < 2):
@@ -44,8 +59,15 @@ if __name__ == "__main__":
   data = ReadData(sys.argv[1])
   train_data_set_x, test_data_set_x, train_data_set_y, test_data_set_y = \
     train_test_split(data.iloc[:, :-1], data.iloc[:, -1:], test_size=0.2)
-  # clf = Ridge(alpha=1.0)
-  # clf.fit(train_data_set_x, train_data_set_y)
-  # score = clf.score(test_data_set_x, test_data_set_y.values.ravel())
-  # print(score)
-  GSCV()
+  data_X = data.iloc[:, :-1]
+  data_y = data.iloc[:, -1:]
+  #Grid search cv
+  params = GSCV()
+  model = Ridge(alpha=params['alpha'], normalize=params['normalize'])
+  # 10 fold CV
+  KFoldCV(model, data_X, data_y, 10)
+  # train final model
+  model.fit(data_X, data_y.values.ravel())
+  print(model.coef_)
+
+
